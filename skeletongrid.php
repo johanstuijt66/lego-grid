@@ -1,4 +1,4 @@
-<?php defined('SYSPATH') or die('No direct script access.');
+<?php
 
 class Skeletongrid
 {
@@ -7,9 +7,7 @@ class Skeletongrid
 
   public function __construct($wrap_in_class = NULL)
   {
-    $wrap_in_class .= " small-skeleton-gaps";
-
-    $this->grid = new Grid(trim($wrap_in_class));
+    $this->grid = new Grid($wrap_in_class);
   }
 
   public function row($class = array(), $id = NULL)
@@ -28,6 +26,7 @@ class Skeletongrid
     }
 
     $class = (isset($attribs['class']) ? $attribs['class'] : "");
+
     $attribs['class'] = trim($class . " row");
 
     $this->grid->row($attribs, $id);
@@ -42,9 +41,7 @@ class Skeletongrid
     return $this;
   }
 
-  public function half() { return $this->col("half column"); }
   public function one() { return $this->col("one column"); }
-  public function oneandhalf() { return $this->col("oneandhalf column"); }
   public function two() { return $this->col("two columns"); }
   public function three() { return $this->col("three columns"); }
   public function four() { return $this->col("four columns"); }
@@ -92,10 +89,12 @@ class Skeletongrid
 
   private function lego($content)
   {
-    return "<div".HTML::attributes(array("class" => "element")).">"
-         . "<div".HTML::attributes(array("class" => $this->css)).">"
+    return '<div class="element">'
+         . '<div class="'.$this->css.'">'
+         . '<div>'
          . $content
-         . "</div>"
-         . "</div>";
+         . '</div>'
+         . '</div>'
+         . '</div>';
   }
 }
