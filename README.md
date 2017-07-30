@@ -71,7 +71,9 @@ And in the style sheet i put:
 }
 ```
 
-And still we are not done yet! The WIDTH's of the columns are OK now, but the HEIGHT will vary, depending on the content that is put inside each column. Somehow, i must force this content to have a certain apsect ratio (look back at the first image in this README, it contains content parts with apsect ratio 1:1, 2:1 and the yellow one at the bottom is 1:2.
+And still we are not done yet!
+
+The WIDTH's of the columns are OK now, but the HEIGHT's will vary, depending on the content that is put inside each column.   Somehow, i must force the content to have a certain apsect ratio (look back at the first image in this README, it contains contents with aspect ratio's 1:1, 2:1 and the yellow one at the bottom is 1:2).
 
 
 
