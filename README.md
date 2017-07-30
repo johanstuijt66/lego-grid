@@ -27,26 +27,24 @@ Grid.php offers the following methods:
 * `public function emerge();`  
    returns back from the last grid that was descended into.
 * `public function render();`  
-   renders the grid (inclusing all sub-grids inside it)
+   renders the grid (including all sub-grids inside it)
 
 So for the top row of the requested layout, we should call:
 `row,col,put,col,descend,row,col,put,col,put,row,col,put,col,put,emerge`
 
-For getting the gaps between the elements as described in the AListApart article, the PUT method should wrap the given content in two nested DIV's like so:
+For getting the gaps between the elements as described in the AListApart article, the *put* method should wrap the given content in two nested div's like so:
 ```
 <div class="element">
   <div>
-    (content here)
+    (content)
   </div>
 </div>
 ```
-In the CSS, a padding is given to all `<div class="element">` DIV's to get the desired LEGO effect.  
-Now the top-level grid still needs to be surrounded by a DIV that has the same padding.
-Also, the gaps that Skeleton creates must be eliminated.
+A padding is given to all `<div class="element">` div's to get the desired LEGO effect.  
+Only the top-level grid still needs to be surrounded by a div that has the same padding.
+Also, the gaps that Skeleton creates by default must be eliminated.
 
-To make this happen, i wrap the top-level grid in a DIV with css class `no-skeleton-gaps`.
-
-And in the style sheet i put:
+To make this happen, i wrap the top-level grid in a div with css class `no-skeleton-gaps`, and re-define the column widths:
 ```
 .no-skeleton-gaps .column, .no-skeleton-gaps .columns { margin-left: 0; }
 
@@ -70,27 +68,42 @@ And in the style sheet i put:
   box-sizing: border-box;
 }
 ```
+As you can see, below 550px the grid falls apart and all div's will render below each other at 100% width.
 
-And still we are not done yet!
+But we are not done yet!
 
-The WIDTH's of the columns are OK now, but the HEIGHT's will vary, depending on the content that is put inside each column.   Somehow, i must force the content to have a certain apsect ratio (look back at the first image in this README, it contains contents with aspect ratio's 1:1, 2:1 and the yellow one at the bottom is 1:2).
+The width's of the columns are OK now, but the *height's* may vary, depending on the content that is put inside each column.   Somehow, i must force the content to have a certain apsect ratio (look back at the first image above, it contains content blocks with aspect ratio's 1:1, 2:1 and the yellow one at the bottom is 1:2).
 
-After some searching on the web i found again that `padding` can really be your friend:
-
+After some searching on the web i found that `padding` (again) can really be your friend:
 ```
 <div class="aspect-ratio aspect-ratio-1-1">
   <div>
     (content)
   </div>
 </div>
+
+css:
+.aspect-ratio {
+  position: relative;
+}
+
+.aspect-ratio-1-1 {
+  padding-bottom: 100%;
+}
+
+.aspect-ratio > div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden; /* or scroll if you like */
+}
 ```
-In CSS, let the `aspect-ratio` div have `position: relative`, and the inner-div `position: absolute`.  
-Then, give the `aspect-ration-1-1` div `padding-bottom: 100%`. This will make this div a square one.  
-Position the inner-div with `top: 0; left: 0; right: 0; bottom: 0` and your content will sit inside a nice square.  
-Add `overflow: hidden` to the inner-div, so that its content cannot break things (you could also use `overflow: scroll`).
+The `padding-bottom` forces the outer div to become as high as it is wide.  
+The inner div is positioned absolute and laid over the outer div. `Overflow: hidden` prevents content sticking out.
 
-So finally, i let my Skeletongrid class wrap each piece of content like so:
-
+So finally, Skeletongrid will wrap each piece of content like this:
 ```
 <div class="element">
   <div class="$css">
@@ -101,18 +114,19 @@ So finally, i let my Skeletongrid class wrap each piece of content like so:
 </div>
 ```
 The `$css` variable must be set before the call to `put()` using an extra `css()` method.  
-So before putting some content inside a square box, you call `css("aspect-ration aspect-ratio-1-1")`. 
+Before calling `put()` to put some content inside a square column, you call `css("aspect-ratio aspect-ratio-1-1")`. 
+I could also have added an extra (optional) argument to the `put()` method of course, but then we would repeat that argument lots of times (the webpage contains mostly square parts).
 
 Aspect ratio 1:2 needs a little trick:
 ```
-.apect-ration-1-2 {
-  padding-top: 10px;
+.aspect-ratio-1-2 {
+  padding-top: 20px;
   padding-bottom: 200%;
 }
 ```
-This box is twice as tall as it is wide, because of `padding-bottom: 200%`, but we also need to make it a bit more tall because of the horizontal gap that also must be taken into account! And then `padding-top: 20px` gives us this little extra height.
+This box is twice as tall as it is wide, because of `padding-bottom: 200%`, but we also need to make it a bit more tall because of the horizontal gap that also must be taken into account! And then `padding-top: 20px` gives us the exact extra height.
 
-Apect ratio 2:1 is simple:
+Apect ratio 2:1 is simpler:
 ```
 .aspect-ratio-2-1 {
   padding-bottom: 50%;
@@ -120,4 +134,3 @@ Apect ratio 2:1 is simple:
 ```
 
 That's it!
-
