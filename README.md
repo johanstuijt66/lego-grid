@@ -5,16 +5,17 @@ Inspired by this article: [Learning from Lego](https://alistapart.com/article/le
 
 ![requested webpage layout](https://github.com/johanstuijt66/lego-grid/blob/master/grid.jpg)
 
-The GRID consists of ROWS and COLUMNS, and also supports a GRID-IN-A-GRID with unlimited depth. 
+The GRID consists of ROWS and COLUMNS, and also supports a GRID-IN-A-GRID with unlimited depth.  
 GRID-IN-A-GRID in necessary to create the top part of the requested webpage layout:
 
 ![top row](https://github.com/johanstuijt66/lego-grid/blob/master/grid-depth.jpg)
 
 The first ROW (red box) contains two COLUMNS (green boxes), and the second COLUMN contains a new GRID with two ROWS.
 
-The grid generator created the grid using DIV elements, and you supply the CSS classes which will make ome DIV a ROW, and another a COLUMN. I like using Skeleton, and with Skeleton, a `<div class="row">` is a ROW, and a `<div class="three columns">` is a column.
+The grid generator creates the grid using DIV elements, and you supply the CSS classes which will make one DIV a ROW, and another a COLUMN. It depends on which CSS framework you will use (if any) to create the GRID.  
+I like using Skeleton, and with Skeleton, a `<div class="row">` is a ROW, and a `<div class="three columns">` is a column.
 
-The API i came up with has these methods:
+The php class i came up with has these methods:
 
 * `public function row($class = array(), $id = "");`  
    starts a new row, with optional css-class and optional id attribute.
