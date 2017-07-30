@@ -32,8 +32,46 @@ The API i came up with has these methods:
 So for the top row of the requested layout, we should call:
 `row,col,put,col,descend,row,col,put,col,put,row,col,put,col,put,emerge`
 
-Many CSS grid frameworks divide a row in 12 parts, and a column may have a width of 1,2,3 .. or 12 parts. The number 12 is handy because this will allow for 1 big column, 2 equal, 3 equal, 4 equal, 6 equal or 12 equal columns inside a row.
+For getting the gaps between the elements as described in the AListApart article, the PUT method should wrap the given content in two nested DIV's like so:
+```
+<div class="element">
+  <div>
+    (content here)
+  </div>
+</div>
+```
+In the CSS, a padding is given to all `<div class="element">` DIV's to get the desired LEGO effect.  
+Now the top-level grid still needs to be surrounded by a DIV that has the same padding.
+Also, the gaps that Skeleton creates must be eliminated.
 
+To make this happen, i wrap the top-level grid in a DIV with css class `no-skeleton-gaps`.
+
+And in the style sheet i put:
+```
+.no-skeleton-gaps .column, .no-skeleton-gaps .columns { margin-left: 0; }
+
+@media (min-width: 550px) {
+  .no-skeleton-gaps .one.column     { width:   8.3333%; }
+  .no-skeleton-gaps .two.columns    { width:  16.7777%; }
+  .no-skeleton-gaps .three.columns  { width:  25.0000%; }
+  .no-skeleton-gaps .four.columns   { width:  33.3333%; }
+  .no-skeleton-gaps .five.columns   { width:  41.6666%; }
+  .no-skeleton-gaps .six.columns    { width:  50.0000%; }
+  .no-skeleton-gaps .seven.columns  { width:  58.3333%; }
+  .no-skeleton-gaps .eight.columns  { width:  66.6666%; }
+  .no-skeleton-gaps .nine.columns   { width:  75.0000%; }
+  .no-skeleton-gaps .ten.columns    { width:  83.3333%; }
+  .no-skeleton-gaps .eleven.columns { width:  91.6666%; }
+  .no-skeleton-gaps .twelve.columns { width: 100.0000%; }
+}
+
+.element, .no-skeleton-gaps {
+  padding: 10px;
+  box-sizing: border-box;
+}
+```
+
+And still we are not done yet! The WIDTH's of the columns are OK now, but the HEIGHT will vary, depending on the content that is put inside each column. Somehow, i must force this content to have a certain apsect ratio (look back at the first image in this README, it contains content parts with apsect ratio 1:1, 2:1 and the yellow one at the bottom is 1:2.
 
 
 
