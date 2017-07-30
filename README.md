@@ -114,7 +114,7 @@ So finally, Skeletongrid will wrap each piece of content like this:
 </div>
 ```
 The `$css` variable must be set before the call to `put()` using an extra `css()` method.  
-Before calling `put()` to put some content inside a square column, you call `css("aspect-ratio aspect-ratio-1-1")`. 
+Before calling `put()` to put some content inside a square column, you call `css("aspect-ratio aspect-ratio-1-1")`.  
 I could also have added an extra (optional) argument to the `put()` method of course, but then we would repeat that argument lots of times (the webpage contains mostly square parts).
 
 Aspect ratio 1:2 needs a little trick:
@@ -124,7 +124,7 @@ Aspect ratio 1:2 needs a little trick:
   padding-bottom: 200%;
 }
 ```
-This box is twice as tall as it is wide, because of `padding-bottom: 200%`, but we also need to make it a bit more tall because of the horizontal gap that also must be taken into account! And then `padding-top: 20px` gives us the exact extra height.
+This box is twice as tall as it is wide, because of `padding-bottom: 200%`, but we also need to make it a bit more tall because of the horizontal gap that also must be taken into account! `padding-top: 20px` gives us the exact extra height.
 
 Apect ratio 2:1 is simpler:
 ```
@@ -133,4 +133,38 @@ Apect ratio 2:1 is simpler:
 }
 ```
 
-That's it!
+Even with chaining support, it is still cumbersome to call all these methods in the correct order to define the grid.  
+Also, the website is a Joomla website, so how am i gonna do all these calls from within a Joomla component?
+
+I arranged the grid to be defined using one string and an array holding the content particles:
+
+`r-c6-p1:1-c6-d-r-c6-p1:1-c6-p1:1-r-c6-p1:1-c6-p1:1-e` is used to define the top row as above.
+
+```
+$definition = explode("-", $definition);
+foreach($definition as $gridcall)
+{
+  if($gridcall == "r")
+  {
+    $grid->row();
+  }
+  else if(strncmp($gridcall, "c", 1) == 0)
+  {
+    $widths = array("twelve columns", "one column", "two columns", "three columns" ... etc );
+    $width = min(12, max(1, intval(substr($gridcall, 1)))); // 1 .. 12 
+    $width = $widths[$width];
+    $grid->col($width);
+  }
+
+  etc
+}
+```
+This is not hard to do in php. When a *p* is encountered, you take the next content particle from the stack (if any).
+
+In Joomla, i added one string to the *category blog* menu item configuration, where you can enter the grid definition.  
+In the category blog override (excuse the Joomla jargon) i implemented the loop above that decodes the grid definition.
+
+
+
+
+
