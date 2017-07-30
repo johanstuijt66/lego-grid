@@ -1,4 +1,4 @@
-<?php defined('SYSPATH') or die('No direct script access.');
+<?php
 
 class Grid
 {
@@ -14,18 +14,7 @@ class Grid
   /* Start a new ROW with optional ATTRIBS */
   public function row($class = array(), $id = NULL)
   {
-    $attribs = array();
-    if(is_array($class))
-    {
-      $attribs = $class;
-    }
-    else
-    {
-      if($class = strval($class))
-      {
-        $attribs["class"] = $class;
-      }
-    }
+    $attribs = $this->make_attribs($class);
 
     if($id)
     {
@@ -40,18 +29,7 @@ class Grid
   /* Start a new COLUMN with optional ATTRIBS */
   public function col($class = array())
   {
-    $attribs = array();
-    if(is_array($class))
-    {
-      $attribs = $class;
-    }
-    else
-    {
-      if($class = strval($class))
-      {
-        $attribs["class"] = $class;
-      }
-    }
+    $attribs = $this->make_attribs($class);
 
     $this->level->col($attribs);
 
@@ -99,6 +77,23 @@ class Grid
     }
 
     return $content;
+  }
+
+  // make sure attribs will be an array
+  private function make_attribs($class = array())
+  {
+    $attribs = array();
+    if(is_array($class))
+    {
+      return $class;
+    }
+
+    if($class = strval($class))
+    {
+      return array("class" => $class);
+    }
+
+    return array();
   }
 }
 
@@ -323,6 +318,7 @@ class Content
   }
 }
 
+// this one is copied from kohana framework
 class Compiledattribs
 {
   private $attribs = array();
@@ -359,4 +355,3 @@ class Compiledattribs
     return $compiled;
   }
 }
-
